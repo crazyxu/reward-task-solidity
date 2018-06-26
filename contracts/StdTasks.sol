@@ -12,6 +12,8 @@ contract StdTasks{
         uint reward;
     }
 
+    event AddTask(string serial, uint taskId);
+
     uint numTasks;
     mapping(uint => Task) tasks;
 
@@ -19,9 +21,11 @@ contract StdTasks{
     }
 
     //添加任务，coin暂存在合约账户
-    function addTask(string name, string description) public payable returns(uint taskId) {
-        taskId = numTasks++;
+    function addTask(string name, string description, string serial) public payable returns(uint taskId) {
+        taskId = ++numTasks;
         tasks[taskId] = Task(State.Created, name, description, msg.sender, 0, msg.value);
+        //发送成功事件
+        emit AddTask(serial, taskId);
     }
 
     //查询任务详细
